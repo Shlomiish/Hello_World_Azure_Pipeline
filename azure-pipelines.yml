@@ -10,51 +10,39 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
-  sonarProjectName: 'Hello_World_pipeline'
-  sonarConnectionName: 'SonarQube_Connection'
-
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-
-# Prepare SonarQube Analysis
-- task: SonarQubePrepare@5
-  displayName: 'Prepare SonarQube Analysis'
+    
+- task: SonarQubePrepare@6
   inputs:
-    SonarQube: '$(sonarConnectionName)'  # SonarQube service connection name
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: '$(sonarProjectKey)'
-    cliProjectName: '$(sonarProjectName)'
-    cliSources: '.'
-    extraProperties: |
-      sonar.qualitygate.wait=true
-      sonar.verbose=true
-      # Ensure no branch-related properties are included
-      # sonar.branch.name=$(Build.SourceBranchName)  # Make sure this or similar lines are not present
-
-# Run SonarQube Analysis
-- task: SonarQubeAnalyze@5
-  displayName: 'Run SonarQube Analysis'
-
+    SonarQube: 'SonarQube_Connection'
+    scannerMode: 'MSBuild'
+    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
+# Dotnet build task
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+# Run Code Analysis task
+- task: SonarQubeAnalyze@6
+# Publish Quality Gate Result task
+- task: SonarQubePublish@6
+  inputs:
+    pollingTimeoutSec: '300'
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
-
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
@@ -63,4 +51,3 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
-
