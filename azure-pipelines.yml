@@ -31,7 +31,7 @@ steps:
 - task: SonarQubePrepare@5
   displayName: 'Prepare SonarQube Analysis'
   inputs:
-    SonarQube: 'SonarQube_Connection'  # Replace with your SonarQube service connection name
+    SonarQube: 'sonarqube'  # Replace with your SonarQube service connection name
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: '$(sonarProjectKey)'
@@ -40,8 +40,6 @@ steps:
     extraProperties: |
       sonar.qualitygate.wait=true
       sonar.verbose=true
-      sonar.branch.name=$(Build.SourceBranchName)  # Use the current branch name
-      sonar.branch.target=$(Build.SourceBranch)  # Use the target branch name
 
 # Run SonarQube Analysis
 - task: SonarQubeAnalyze@5
