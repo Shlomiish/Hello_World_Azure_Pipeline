@@ -30,7 +30,7 @@ steps:
 - task: SonarQubePrepare@5
   displayName: 'Prepare SonarQube Analysis'
   inputs:
-    SonarQube: 'sonarqube'  # Replace with your SonarQube service connection name
+    SonarQube: 'SonarQube_Connection'  # Replace with your SonarQube service connection name
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: '$(sonarProjectKey)'
