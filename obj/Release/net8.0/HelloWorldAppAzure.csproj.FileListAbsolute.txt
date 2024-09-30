@@ -1,0 +1,15 @@
+/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure
+/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure.deps.json
+/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure.runtimeconfig.json
+/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure.dll
+/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure.pdb
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.GeneratedMSBuildEditorConfig.editorconfig
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.AssemblyInfoInputs.cache
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.AssemblyInfo.cs
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.csproj.CoreCompileInputs.cache
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.sourcelink.json
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.dll
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/refint/HelloWorldAppAzure.dll
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.pdb
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/HelloWorldAppAzure.genruntimeconfig.cache
+/home/shlomi/Desktop/HelloWorldAppAzure/obj/Release/net8.0/ref/HelloWorldAppAzure.dll

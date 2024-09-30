@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>HelloWorldAppAzure</id>
+    <version>1.0.0</version>
+    <authors>HelloWorldAppAzure</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="a0476c9e81947295d7f5205c246e0f4ff6835b0a" />
+    <dependencies>
+      <group targetFramework="net8.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure.runtimeconfig.json" target="lib/net8.0/HelloWorldAppAzure.runtimeconfig.json" />
+    <file src="/home/shlomi/Desktop/HelloWorldAppAzure/bin/Release/net8.0/HelloWorldAppAzure.dll" target="lib/net8.0/HelloWorldAppAzure.dll" />
+  </files>
+</package>
