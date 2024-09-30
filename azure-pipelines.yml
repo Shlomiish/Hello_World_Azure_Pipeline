@@ -12,7 +12,7 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'  # Adjust with your project key
+  sonarProjectKey: 'hello-world-pipeline_hello-world-pipeline_5f04da3c-1a9e-45eb-bf6e-e5e38e50c20b'  # Adjust with your project key
   sonarProjectName: 'Hello_World_pipeline'  # Adjust with your project name
 
 steps:
