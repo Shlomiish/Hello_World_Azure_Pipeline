@@ -18,7 +18,7 @@ steps:
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    projects: '*/.csproj'
+    projects: 'HelloWorldAppAzure.csproj'  # Directly reference the project file
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
