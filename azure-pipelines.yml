@@ -7,7 +7,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   packageName: 'HelloWorldApp'
-  feedName: 'Hello_World'
+  feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.0'  # Fixed version
 
