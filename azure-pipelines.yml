@@ -20,12 +20,6 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build the Project'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
 
 - task: SonarQubePrepare@6
   inputs:
@@ -33,6 +27,13 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '$(sonarQubeProjectKey)'  
     projectName: '$(sonarQubeProjectName)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build the Project'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
 
 
 - task: SonarQubeAnalyze@6
