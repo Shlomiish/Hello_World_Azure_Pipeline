@@ -2,47 +2,72 @@ trigger:
   branches:
     include:
       - main
+
 pool:
   name: 'Default'
+
 variables:
   buildConfiguration: 'Release'
   packageName: 'HelloWorldApp'
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
+
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: '*/.csproj'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: '*/.csproj'
     arguments: '--configuration $(buildConfiguration)'
-    
-- task: SonarQubePrepare@6
+
+# Prepare SonarQube Analysis
+- task: SonarQubePrepare@5
+  displayName: 'Prepare SonarQube Analysis'
   inputs:
     SonarQube: 'SonarQube_Connection'
-    scannerMode: 'MSBuild'
-    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
-# Dotnet build task
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: '$(projectName)'
+    cliProjectName: '$(projectName)'
+    cliSources: '.'
+    extraProperties: |
+      sonar.qualitygate.wait=true
+      sonar.verbose=true
+
+# Run dotnet build task (rebuild if necessary)
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
+  inputs:
+    command: 'build'
+    projects: '*/.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
 # Run Code Analysis task
 - task: SonarQubeAnalyze@6
+  displayName: 'Run SonarQube Analysis'
+
 # Publish Quality Gate Result task
 - task: SonarQubePublish@6
+  displayName: 'Publish Quality Gate Results'
   inputs:
     pollingTimeoutSec: '300'
+
+# Pack the project into a NuGet package
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: '*/.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
+
+# Push the NuGet package to the internal feed
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
@@ -51,4 +76,3 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
-
