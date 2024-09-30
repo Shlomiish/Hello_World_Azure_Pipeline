@@ -29,7 +29,7 @@ steps:
   inputs:
     SonarQube: 'SonarQube_Connection'
     scannerMode: 'MSBuild'
-    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_9e3c6ce2-e68a-4e1c-9fee-af7e72ee85fb'
+    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5833188c-d250-4980-a5f6-ff800771abee'
 
 # Dotnet build task
 - task: DotNetCoreCLI@2
