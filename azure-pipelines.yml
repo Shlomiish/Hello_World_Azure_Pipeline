@@ -31,14 +31,9 @@ steps:
   inputs:
     SonarQube: '$(sonarQubeServiceConnection)'
     scannerMode: 'MSBuild'
-    projectKey: '$(sonarQubeProjectKey)'  # Keep this generic if not analyzing branches
+    projectKey: '$(sonarQubeProjectKey)'  
     projectName: '$(sonarQubeProjectName)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build the Project Again'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
 
 - task: SonarQubeAnalyze@6
   displayName: 'Run SonarQube analysis'
