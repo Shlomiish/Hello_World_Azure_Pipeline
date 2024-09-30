@@ -27,7 +27,7 @@ steps:
     
 - task: SonarQubePrepare@6
   inputs:
-    SonarQube: 'http://51.20.116.107:9000'
+    SonarQube: 'SonarQube'
     scannerMode: 'MSBuild'
     projectKey: 'Hello_World_pipeline_Hello_World_pipeline_9e3c6ce2-e68a-4e1c-9fee-af7e72ee85fb'
 
