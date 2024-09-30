@@ -12,6 +12,7 @@ variables:
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
   sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
   sonarProjectName: 'Hello_World_pipeline'
+  sonarConnectionName: 'SonarQube_Connection'
 
 steps:
 - task: DotNetCoreCLI@2
@@ -31,7 +32,7 @@ steps:
 - task: SonarQubePrepare@5
   displayName: 'Prepare SonarQube Analysis'
   inputs:
-    SonarQube: 'sonarqube'  # Replace with your SonarQube service connection name
+    SonarQube: '$(sonarConnectionName)'  # Replace with your SonarQube service connection name
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: '$(sonarProjectKey)'
