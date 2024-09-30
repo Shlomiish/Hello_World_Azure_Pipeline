@@ -26,10 +26,8 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '$(sonarQubeProjectKey)'  
     projectName: '$(sonarQubeProjectName)'
-    # Remove sonar.branch.name property if it's set in your project settings
-    extraProperties: |
-      sonar.branch = main  # Optional: Set to a specific commit if needed
-      # Remove this line if it causes errors, just run without branch properties
+   
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
