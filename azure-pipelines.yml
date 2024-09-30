@@ -4,17 +4,14 @@ trigger:
       - main
 pool:
   name: 'Default'
+  
 variables:
   buildConfiguration: 'Release'
   packageName: 'HelloWorldApp'
-  feedName: 'New_Hello_World'
-  projectName: 'Hello_World_pipeline'
-  packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarQubeServiceConnection: 'SonarQube_Connection'  # Replace with your service connection name
-  sonarQubeProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'  # Replace with your SonarQube project key
-  sonarQubeProjectName: 'Hello_World_pipeline'  # Replace with your SonarQube project name
-  sonarQubeUrl: 'http://51.20.116.107:9000'  # Replace with your SonarQube server URL
-
+  sonarQubeServiceConnection: 'SonarQube_Connection'
+  sonarQubeProjectKey: 'Hello_World_pipeline'
+  sonarQubeProjectName: 'Hello_World_pipeline'
+  
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
@@ -29,23 +26,24 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- task: SonarQubePrepare@6  # Updated task version if available
-  displayName: 'Prepare analysis on SonarQube'
+steps:
+- task: SonarQubePrepare@6
   inputs:
     SonarQube: '$(sonarQubeServiceConnection)'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
+    scannerMode: 'MSBuild'
+    projectKey: '$(sonarQubeProjectKey)'  # Keep this generic if not analyzing branches
     projectName: '$(sonarQubeProjectName)'
-    projectVersion: '$(packageVersion)'
-    sources: '.'
-    extraProperties: |
-      sonar.host.url=$(sonarQubeUrl)
-      sonar.cs.vs.project=HelloWorldApp  # Update as per your project structure
 
-# Use SonarQubeAnalyze instead of SonarQubeRun
-- task: SonarQubeAnalyze@6  # Updated task version if available
+- task: DotNetCoreCLI@2
+  displayName: 'Build the Project'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+
+
+- task: SonarQubeAnalyze@6
   displayName: 'Run SonarQube analysis'
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
