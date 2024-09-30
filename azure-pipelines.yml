@@ -16,46 +16,33 @@ steps:
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-
+    
 - task: SonarQubePrepare@6
   inputs:
     SonarQube: 'SonarQube_Connection'
     scannerMode: 'MSBuild'
     projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
-    projectName: 'Hello World Pipeline'  # Optional: add project name for clarity
-    extraProperties: |
-      sonar.exclusions=**/*.json  # Add exclusions if needed
-      # Ensure no branch analysis properties are included
-      # Do not specify sonar.branch.name or any related properties here
-
+# Dotnet build task
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-
+# Run Code Analysis task
 - task: SonarQubeAnalyze@6
-  displayName: 'Run Code Analysis'
-
+# Publish Quality Gate Result task
 - task: SonarQubePublish@6
   inputs:
     pollingTimeoutSec: '300'
-
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
-
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
