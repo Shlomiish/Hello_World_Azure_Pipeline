@@ -9,7 +9,7 @@ variables:
   packageName: 'HelloWorldApp'
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
-  packageVersion: '1.0.0'  # Fixed version
+  packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
 
 steps:
 - task: DotNetCoreCLI@2
