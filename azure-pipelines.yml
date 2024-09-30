@@ -16,33 +16,42 @@ steps:
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-    
+
 - task: SonarQubePrepare@6
   inputs:
     SonarQube: 'SonarQube_Connection'
     scannerMode: 'MSBuild'
     projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
-# Dotnet build task
+    projectName: 'Hello World Pipeline'  # Optional: add project name for clarity
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
-# Run Code Analysis task
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
 - task: SonarQubeAnalyze@6
-# Publish Quality Gate Result task
+  displayName: 'Run Code Analysis'  # Optional: adding a display name
+
 - task: SonarQubePublish@6
   inputs:
     pollingTimeoutSec: '300'
+
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
+
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
@@ -51,3 +60,4 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
+
