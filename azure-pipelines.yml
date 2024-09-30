@@ -23,7 +23,7 @@ steps:
 - task: SonarQubePrepare@5
   displayName: 'Prepare SonarQube Analysis'
   inputs:
-    SonarQube: '$(sonarQubeServiceConnection)'
+    SonarQube: 'SonarQube_Connection'
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: '$(sonarQubeProjectKey)'
