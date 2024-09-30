@@ -18,13 +18,13 @@ steps:
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    projects: '*/.csproj'  # Directly reference the project file
+    projects: 'HelloWorldAppAzure.csproj'  # Directly reference the project file
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
-    projects: '*/.csproj'
+    projects: 'HelloWorldAppAzure.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
 # Prepare SonarQube Analysis
