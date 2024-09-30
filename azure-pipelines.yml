@@ -10,14 +10,12 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
@@ -30,27 +28,25 @@ steps:
     SonarQube: 'SonarQube_Connection'
     scannerMode: 'MSBuild'
     projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5833188c-d250-4980-a5f6-ff800771abee'
+    extraProperties: |
+      sonar.branch.name=
+      sonar.branch.target=
 
 # Dotnet build task
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
-
 # Run Code Analysis task
 - task: SonarQubeAnalyze@6
-
 # Publish Quality Gate Result task
 - task: SonarQubePublish@6
   inputs:
     pollingTimeoutSec: '300'
-
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
-
-
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
