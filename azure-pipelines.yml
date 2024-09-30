@@ -51,7 +51,7 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 # Run Code Analysis task
-- task: SonarQubeAnalyze@6
+- task: SonarQubeAnalyze@5
   displayName: 'Run SonarQube Analysis'
 
 # Publish Quality Gate Result task
