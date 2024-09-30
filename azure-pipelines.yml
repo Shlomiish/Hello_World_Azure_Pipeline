@@ -10,8 +10,19 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
+  sonarQubeProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_9e3c6ce2-e68a-4e1c-9fee-af7e72ee85fb'  # SonarQube Project Key
 
 steps:
+- task: SonarQubePrepare@4
+  displayName: 'Prepare Analysis Configuration'
+  inputs:
+    SonarQube: 'SonarQube Connection'  # Replace with your service connection name
+    scannerMode: 'CLI'
+    configMode: 'file'
+    cliProjectKey: '$(sonarQubeProjectKey)'  # Use the variable for the project key
+    cliProjectName: '$(projectName)'          # Project name in SonarQube
+    cliSources: 'src'                         # Adjust this path as needed for your source code
+
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
@@ -32,6 +43,13 @@ steps:
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
 
+- task: SonarQubeAnalyze@4
+  displayName: 'Run SonarQube Analysis'
+
+- task: SonarQubePublish@4
+  displayName: 'Publish SonarQube Results'
+  inputs:
+    pollingTimeoutSec: '300'  # Adjust timeout as needed
 
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
@@ -41,3 +59,4 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
+
