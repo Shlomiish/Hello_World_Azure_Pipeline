@@ -29,7 +29,6 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-# SonarQube Begin
 - task: SonarQubePrepare@4
   displayName: 'Prepare analysis on SonarQube'
   inputs:
@@ -47,6 +46,7 @@ steps:
 # SonarQube Analysis
 - task: SonarQubeRun@4
   displayName: 'Run SonarQube analysis'
+# SonarQube End
 
 # SonarQube End
 
