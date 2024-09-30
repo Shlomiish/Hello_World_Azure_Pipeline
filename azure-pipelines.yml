@@ -12,64 +12,48 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  fileName: 'HelloWorldAppAzure.csproj'
 
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
-    projects: '$(fileName)'  # Directly reference the project file
+    projects: '*/.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
-    projects: '$(fileName)'
+    projects: '*/.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-# Prepare SonarQube Analysis
-- task: SonarQubePrepare@5
-  displayName: 'Prepare SonarQube Analysis'
+- task: SonarQubePrepare@6
   inputs:
     SonarQube: 'SonarQube_Connection'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: '$(projectName)'
-    cliProjectName: '$(projectName)'
-    cliSources: '.'
+    scannerMode: 'MSBuild'
+    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
     extraProperties: |
-      sonar.qualitygate.wait=true
-      sonar.verbose=true
-      # No branch-specific properties, will analyze the default branch
+      sonar.branch.name=main  # Optionally set the branch name to main explicitly, remove if unnecessary
 
-# Run dotnet build task (rebuild if necessary)
+# Dotnet build task
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
-  inputs:
-    command: 'build'
-    projects: '$(fileName)'
-    arguments: '--configuration $(buildConfiguration)'
 
 # Run Code Analysis task
-- task: SonarQubeAnalyze@5
-  displayName: 'Run SonarQube Analysis'
+- task: SonarQubeAnalyze@6
 
 # Publish Quality Gate Result task
 - task: SonarQubePublish@6
-  displayName: 'Publish Quality Gate Results'
   inputs:
     pollingTimeoutSec: '300'
 
-# Pack the project into a NuGet package
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
-    packagesToPack: '$(fileName)'
+    packagesToPack: '*/.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
 
-# Push the NuGet package to the internal feed
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
