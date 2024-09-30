@@ -30,6 +30,10 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
     projectName: 'Hello World Pipeline'  # Optional: add project name for clarity
+    extraProperties: |
+      sonar.exclusions=**/*.json  # Add exclusions if needed
+      # Ensure no branch analysis properties are included
+      # Do not specify sonar.branch.name or any related properties here
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
@@ -39,7 +43,7 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 - task: SonarQubeAnalyze@6
-  displayName: 'Run Code Analysis'  # Optional: adding a display name
+  displayName: 'Run Code Analysis'
 
 - task: SonarQubePublish@6
   inputs:
