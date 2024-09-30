@@ -39,11 +39,12 @@ steps:
     extraProperties: |
       sonar.qualitygate.wait=true
       sonar.verbose=true
+      sonar.branch.name=
+      sonar.branch.target=
 
 # Dotnet build task
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
-# Run Code Analysis task
 
 # Run SonarQube Analysis
 - task: SonarQubeAnalyze@5
