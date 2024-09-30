@@ -11,7 +11,7 @@ variables:
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
   sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
-  sonarProjectName: 'SonarQube_Connection'
+  sonarProjectName: 'Hello_World_pipeline'
   
 steps:
 - task: DotNetCoreCLI@2
