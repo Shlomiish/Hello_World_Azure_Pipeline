@@ -41,6 +41,7 @@ steps:
     extraProperties: |
       sonar.qualitygate.wait=true
       sonar.verbose=true
+      # No branch-specific properties, will analyze the default branch
 
 # Run dotnet build task (rebuild if necessary)
 - task: DotNetCoreCLI@2
@@ -77,3 +78,4 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
+
