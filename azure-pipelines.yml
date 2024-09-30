@@ -20,12 +20,18 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
-- task: SonarQubePrepare@6
+- task: SonarQubePrepare@5
+  displayName: 'Prepare SonarQube Analysis'
   inputs:
     SonarQube: '$(sonarQubeServiceConnection)'
-    scannerMode: 'MSBuild'
-    projectKey: '$(sonarQubeProjectKey)'  
-    projectName: '$(sonarQubeProjectName)'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: '$(sonarQubeProjectKey)'
+    cliProjectName: '$(sonarQubeProjectName)'
+    cliSources: '.'
+    extraProperties: |
+      sonar.qualitygate.wait=true
+      sonar.verbose=true
    
 
 
@@ -36,10 +42,10 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- task: SonarQubeAnalyze@6
+- task: SonarQubeAnalyze@5
   displayName: 'Run SonarQube analysis'
 
-- task: SonarQubePublish@6
+- task: SonarQubePublish@5
   displayName: 'Publish SonarQube Results'
 
 - task: DotNetCoreCLI@2
