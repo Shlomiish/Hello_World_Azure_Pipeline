@@ -43,12 +43,9 @@ steps:
       sonar.host.url=$(sonarQubeUrl)
       sonar.cs.vs.project=HelloWorldApp  # Update as per your project structure
 
-# SonarQube Analysis
-- task: SonarQubeRun@4
+# Use SonarQubeAnalyze instead of SonarQubeRun
+- task: SonarQubeAnalyze@4
   displayName: 'Run SonarQube analysis'
-# SonarQube End
-
-# SonarQube End
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
