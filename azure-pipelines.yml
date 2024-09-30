@@ -41,8 +41,8 @@ steps:
     extraProperties: |
       sonar.qualitygate.wait=true
       sonar.verbose=true
-      # Removed branch properties
-      # sonar.branch.name=$(Build.SourceBranchName)
+      # Ensure no branch-related properties are included
+      # sonar.branch.name=$(Build.SourceBranchName)  # Make sure this or similar lines are not present
 
 # Run SonarQube Analysis
 - task: SonarQubeAnalyze@5
