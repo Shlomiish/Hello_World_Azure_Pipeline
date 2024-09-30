@@ -10,6 +10,9 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
+  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
+  sonarProjectName: 'SonarQube_Connection'
+  
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
@@ -23,24 +26,29 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
     
-- task: SonarQubePrepare@6
+# Prepare SonarQube Analysis
+- task: SonarQubePrepare@5
+  displayName: 'Prepare SonarQube Analysis'
   inputs:
-    SonarQube: 'SonarQube_Connection'
-    scannerMode: 'MSBuild'
-    projectKey: 'Hello_World_pipeline_Hello_World_pipeline_5833188c-d250-4980-a5f6-ff800771abee'
+    SonarQube: 'sonarqube'  # Replace with your SonarQube service connection name
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: '$(sonarProjectKey)'
+    cliProjectName: '$(sonarProjectName)'
+    cliSources: '.'
     extraProperties: |
-      sonar.branch.name=
-      sonar.branch.target=
+      sonar.qualitygate.wait=true
+      sonar.verbose=true
 
 # Dotnet build task
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
 # Run Code Analysis task
-- task: SonarQubeAnalyze@6
-# Publish Quality Gate Result task
-- task: SonarQubePublish@6
-  inputs:
-    pollingTimeoutSec: '300'
+
+# Run SonarQube Analysis
+- task: SonarQubeAnalyze@5
+  displayName: 'Run SonarQube Analysis'
+
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
