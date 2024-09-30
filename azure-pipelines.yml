@@ -10,6 +10,10 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
+  sonarQubeServiceConnection: 'SonarQube_Connection'  # Replace with your service connection name
+  sonarQubeProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'  # Replace with your SonarQube project key
+  sonarQubeProjectName: 'Hello_World_pipeline'  # Replace with your SonarQube project name
+  sonarQubeUrl: 'http://51.20.116.107:9000'  # Replace with your SonarQube server URL
 
 steps:
 - task: DotNetCoreCLI@2
@@ -25,13 +29,33 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
+# SonarQube Begin
+- task: SonarQubePrepare@4
+  displayName: 'Prepare analysis on SonarQube'
+  inputs:
+    SonarQube: '$(sonarQubeServiceConnection)'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    projectKey: '$(sonarQubeProjectKey)'
+    projectName: '$(sonarQubeProjectName)'
+    projectVersion: '$(packageVersion)'
+    sources: '.'
+    extraProperties: |
+      sonar.host.url=$(sonarQubeUrl)
+      sonar.cs.vs.project=HelloWorldApp  # Update as per your project structure
+
+# SonarQube Analysis
+- task: SonarQubeRun@4
+  displayName: 'Run SonarQube analysis'
+
+# SonarQube End
+
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
@@ -41,3 +65,4 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
+
