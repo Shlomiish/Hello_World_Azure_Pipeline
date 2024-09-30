@@ -2,16 +2,17 @@ trigger:
   branches:
     include:
       - main
+
 pool:
   name: 'Default'
-  
+
 variables:
   buildConfiguration: 'Release'
   packageName: 'HelloWorldApp'
   sonarQubeServiceConnection: 'SonarQube_Connection'
   sonarQubeProjectKey: 'Hello_World_pipeline'
   sonarQubeProjectName: 'Hello_World_pipeline'
-  
+
 steps:
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
@@ -26,7 +27,6 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-steps:
 - task: SonarQubePrepare@6
   inputs:
     SonarQube: '$(sonarQubeServiceConnection)'
@@ -35,15 +35,13 @@ steps:
     projectName: '$(sonarQubeProjectName)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build the Project'
+  displayName: 'Build the Project Again'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
 
-
 - task: SonarQubeAnalyze@6
   displayName: 'Run SonarQube analysis'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
