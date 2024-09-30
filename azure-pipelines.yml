@@ -12,6 +12,8 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
+  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'  # Adjust with your project key
+  sonarProjectName: 'Hello_World_pipeline'  # Adjust with your project name
 
 steps:
 - task: DotNetCoreCLI@2
@@ -20,31 +22,28 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build the Project'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-
 - task: SonarQubePrepare@5
   displayName: 'Prepare SonarQube Analysis'
   inputs:
-    SonarQube: 'SonarQube_Connection'  # Replace with your SonarQube connection name
+    SonarQube: 'SonarQube_Connection'  # Ensure this is correctly set
     scannerMode: 'CLI'
     configMode: 'manual'
-    cliProjectKey: '$(projectName)'  # Use project name for key
-    cliProjectName: '$(projectName)'  # Use project name
+    cliProjectKey: '$(sonarProjectKey)'
+    cliProjectName: '$(sonarProjectName)'
     cliSources: '.'  # Analyze current directory
     extraProperties: |
       sonar.qualitygate.wait=true
       sonar.verbose=true
 
+- task: DotNetCoreCLI@2
+  displayName: 'Build the Project'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) /p:Version=$(packageVersion)'
+
 - task: SonarQubeAnalyze@5
   displayName: 'Run SonarQube Analysis'
-
-- task: SonarQubePublish@5
-  displayName: 'Publish SonarQube Results'
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
