@@ -33,16 +33,6 @@ steps:
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
 
 
-- script: |
-    echo "Listing all files in the nuget_output directory before push:"
-    ls -R $(Build.SourcesDirectory)/nuget_output
-  displayName: 'List NuGet Output Files'
-  
-- script: |
-    echo "Package Version: $(packageVersion)"
-    echo "Build ID: $(Build.BuildId)"
-  displayName: 'Echo Package Version'
-
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
