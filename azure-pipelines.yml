@@ -10,8 +10,8 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarProjectKey: 'HelloWorldApp'        # Replace with your project key
-  sonarProjectName: 'Hello World App'     # Replace with your project name
+  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'        # Replace with your project key
+  sonarProjectName: 'Hello_World_pipeline'     # Replace with your project name
   sonarProjectVersion: '1.0'              # Replace with your project version
 
 steps:
