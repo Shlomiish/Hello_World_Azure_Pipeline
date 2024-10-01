@@ -2,45 +2,39 @@ trigger:
   branches:
     include:
       - main
-
 pool:
   name: 'Default'
-
 variables:
   buildConfiguration: 'Release'
   packageName: 'HelloWorldApp'
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'  # Your SonarQube project key
-  sonarProjectName: 'Hello_World_Pipeline'   # Your SonarQube project name
+  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'        # Replace with your project key
+  sonarProjectName: 'Hello_World_pipeline'     # Replace with your project name
+  sonarProjectVersion: '1.0'              # Replace with your project version
 
 steps:
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'SonarQube_Connection'  # Service connection name created earlier
+    scannerMode: 'MSBuild'
+    projectKey: '$(sonarProjectKey)'
+    projectName: '$(sonarProjectName)'
+    projectVersion: '$(sonarProjectVersion)'
+
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
 
-- task: SonarQubePrepare@5
-  displayName: 'Prepare SonarQube Analysis'
-  inputs:
-    SonarQube: 'SonarQube_Connection'  # Replace with your SonarQube service connection name
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: '$(sonarProjectKey)'
-    cliProjectName: '$(sonarProjectName)'
-    cliSources: '.'  # Adjust to the root directory of your project
-    extraProperties: |
-      sonar.qualitygate.wait=true
-      sonar.verbose=true
-
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) /p:Version=$(packageVersion)'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: SonarQubeAnalyze@5
   displayName: 'Run SonarQube Analysis'
@@ -60,4 +54,8 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
+
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
 
