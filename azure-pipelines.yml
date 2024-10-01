@@ -17,12 +17,16 @@ variables:
 steps:
 - task: SonarQubePrepare@5
   inputs:
-    SonarQube: 'SonarQube_Connection'  # Service connection name created earlier
+    SonarQube: 'SonarQube_Connection'  # Ensure the service connection is correct
     scannerMode: 'MSBuild'
-    projectKey: '$(sonarProjectKey)'
-    projectName: '$(sonarProjectName)'
-    projectVersion: '$(sonarProjectVersion)'
-    # Ensure branch-related properties are not included
+    projectKey: '$(sonarProjectKey)'          # Replace with your actual project key
+    projectName: '$(sonarProjectName)'        # Replace with your actual project name
+    projectVersion: '$(sonarProjectVersion)'  # Replace with your actual project version
+    extraProperties: |
+      # Ensure no branch analysis is passed
+      sonar.projectKey=$(sonarProjectKey)
+      sonar.projectName=$(sonarProjectName)
+      sonar.projectVersion=$(sonarProjectVersion)
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
