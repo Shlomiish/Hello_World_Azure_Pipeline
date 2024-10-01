@@ -1,9 +1,9 @@
 trigger:
-  branches:
-    include:
-      - main
+  - main  # Enable continuous integration for the main branch
+
 pool:
   name: 'Default'
+
 variables:
   buildConfiguration: 'Release'
   packageName: 'HelloWorldApp'
@@ -11,50 +11,44 @@ variables:
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
   sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
-  sonarProjectName: 'Hello_World_pipeline'
-  sonarProjectVersion: '1.0'
+
 steps:
 - task: SonarQubePrepare@5
+  displayName: 'Prepare Analysis Configuration'
   inputs:
-    SonarQube: 'SonarQube_Connection'
+    SonarQube: 'SonarQube_Connection'  # Use the name of your SonarQube service connection
     scannerMode: 'MSBuild'
     projectKey: '$(sonarProjectKey)'
-    projectName: '$(sonarProjectName)'
-    projectVersion: '$(sonarProjectVersion)'
-    extraProperties: |
-      sonar.verbose=true
-      sonar.projectKey=$(sonarProjectKey)
-      sonar.projectName=$(sonarProjectName)
-      sonar.projectVersion=$(sonarProjectVersion)
+    projectName: '$(projectName)'
+
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+
 - task: SonarQubeAnalyze@5
-  displayName: 'Run SonarQube Analysis'
+  displayName: 'Run Code Analysis'
+
 - task: SonarQubePublish@5
+  displayName: 'Publish Quality Gate Result'
   inputs:
     pollingTimeoutSec: '300'
-- task: PowerShell@2
-  displayName: 'Diagnostic: List SonarQube output files'
-  inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host "Listing contents of .sonarqube directory:"
-      Get-ChildItem -Path ".sonarqube" -Recurse
+
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
+
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
