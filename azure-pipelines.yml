@@ -13,13 +13,14 @@ variables:
   sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
 
 steps:
+# Step 1: Prepare SonarQube for scanning
 - task: SonarQubePrepare@5
-  displayName: 'Prepare Analysis Configuration'
   inputs:
-    SonarQube: 'SonarQube_Connection'  # Use the name of your SonarQube service connection
-    scannerMode: 'MSBuild'
-    projectKey: '$(sonarProjectKey)'
-    projectName: '$(projectName)'
+    SonarQube: 'MySonarQube_Connection'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
+    cliSources: '.'
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
@@ -35,12 +36,18 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 - task: SonarQubeAnalyze@5
-  displayName: 'Run Code Analysis'
+  displayName: 'Run SonarQube Analysis'
+
 
 - task: SonarQubePublish@5
-  displayName: 'Publish Quality Gate Result'
   inputs:
     pollingTimeoutSec: '300'
+  displayName: 'Publish SonarQube Quality Gate'
+  
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+  displayName: 'Publish SonarQube Quality Gate'
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
