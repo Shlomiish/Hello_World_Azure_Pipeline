@@ -10,14 +10,13 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'        # Replace with your project key
-  sonarProjectName: 'Hello_World_pipeline'     # Replace with your project name
-  sonarProjectVersion: '1.0'              # Replace with your project version
-
+  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
+  sonarProjectName: 'Hello_World_pipeline'
+  sonarProjectVersion: '1.0'
 steps:
 - task: SonarQubePrepare@5
   inputs:
-    SonarQube: 'SonarQube_Connection'  # Ensure the service connection is correct
+    SonarQube: 'SonarQube_Connection'
     scannerMode: 'MSBuild'
     projectKey: '$(sonarProjectKey)'
     projectName: '$(sonarProjectName)'
@@ -26,31 +25,25 @@ steps:
       sonar.projectKey=$(sonarProjectKey)
       sonar.projectName=$(sonarProjectName)
       sonar.projectVersion=$(sonarProjectVersion)
-      sonar.branch.analysis=false  # Disable branch analysis for Community Edition
-
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build the Project'
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-
 - task: SonarQubeAnalyze@5
   displayName: 'Run SonarQube Analysis'
-
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
-
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
@@ -59,8 +52,6 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
-
 - task: SonarQubePublish@5
   inputs:
     pollingTimeoutSec: '300'
-
