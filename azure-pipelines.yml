@@ -19,14 +19,14 @@ steps:
   inputs:
     SonarQube: 'SonarQube_Connection'  # Ensure the service connection is correct
     scannerMode: 'MSBuild'
-    projectKey: '$(sonarProjectKey)'          # Replace with your actual project key
-    projectName: '$(sonarProjectName)'        # Replace with your actual project name
-    projectVersion: '$(sonarProjectVersion)'  # Replace with your actual project version
+    projectKey: '$(sonarProjectKey)'
+    projectName: '$(sonarProjectName)'
+    projectVersion: '$(sonarProjectVersion)'
     extraProperties: |
-      # Ensure no branch analysis is passed
       sonar.projectKey=$(sonarProjectKey)
       sonar.projectName=$(sonarProjectName)
       sonar.projectVersion=$(sonarProjectVersion)
+      sonar.branch.analysis=false  # Disable branch analysis for Community Edition
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
