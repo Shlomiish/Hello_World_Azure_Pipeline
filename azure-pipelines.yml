@@ -22,6 +22,7 @@ steps:
     projectName: '$(sonarProjectName)'
     projectVersion: '$(sonarProjectVersion)'
     extraProperties: |
+      sonar.verbose=true
       sonar.projectKey=$(sonarProjectKey)
       sonar.projectName=$(sonarProjectName)
       sonar.projectVersion=$(sonarProjectVersion)
@@ -38,12 +39,22 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 - task: SonarQubeAnalyze@5
   displayName: 'Run SonarQube Analysis'
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+- task: PowerShell@2
+  displayName: 'Diagnostic: List SonarQube output files'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "Listing contents of .sonarqube directory:"
+      Get-ChildItem -Path ".sonarqube" -Recurse
 - task: DotNetCoreCLI@2
   displayName: 'Pack the Project'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.SourcesDirectory)/nuget_output /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) /p:PackageId=$(packageName) /p:Version=$(packageVersion)'
 - task: DotNetCoreCLI@2
   displayName: 'Push NuGet Package'
   inputs:
@@ -52,6 +63,3 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '$(projectName)/$(feedName)'
     arguments: '--skip-duplicate'
-- task: SonarQubePublish@5
-  inputs:
-    pollingTimeoutSec: '300'
