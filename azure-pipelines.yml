@@ -17,7 +17,7 @@ variables:
 steps:
 - task: SonarQubePrepare@5
   inputs:
-    SonarQube: 'SonarQubeServiceConnection'  # Service connection name created earlier
+    SonarQube: 'SonarQube_Connection'  # Service connection name created earlier
     scannerMode: 'MSBuild'
     projectKey: '$(sonarProjectKey)'
     projectName: '$(sonarProjectName)'
