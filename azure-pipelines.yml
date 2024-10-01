@@ -10,18 +10,19 @@ variables:
   feedName: 'New_Hello_World'
   projectName: 'Hello_World_pipeline'
   packageVersion: '1.0.$(Build.BuildId)'  # Dynamic version using Build ID
-  sonarProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'        # Replace with your project key
-  sonarProjectName: 'Hello_World_pipeline'     # Replace with your project name
+  sonarProjectKey: 'HelloWorldApp'        # Replace with your project key
+  sonarProjectName: 'Hello World App'     # Replace with your project name
   sonarProjectVersion: '1.0'              # Replace with your project version
 
 steps:
 - task: SonarQubePrepare@5
   inputs:
-    SonarQube: 'SonarQube_Connection'  # Service connection name created earlier
+    SonarQube: 'SonarQubeServiceConnection'  # Service connection name created earlier
     scannerMode: 'MSBuild'
     projectKey: '$(sonarProjectKey)'
     projectName: '$(sonarProjectName)'
     projectVersion: '$(sonarProjectVersion)'
+    # Ensure branch-related properties are not included
 
 - task: DotNetCoreCLI@2
   displayName: 'Restore NuGet Packages'
