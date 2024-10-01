@@ -16,7 +16,7 @@ steps:
 # Step 1: Prepare SonarQube for scanning
 - task: SonarQubePrepare@5
   inputs:
-    SonarQube: 'MySonarQube_Connection'
+    SonarQube: 'SonarQube_Connection'
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: 'Hello_World_pipeline_Hello_World_pipeline_5439e27a-7696-4cc6-a3f9-16f0e5155ba0'
